@@ -95,6 +95,7 @@ export const Arrow: FC<ArrowProps> = ({
   useEffect(() => setQuaternion(), [setQuaternion]);
 
   return (
+    // @ts-ignore
     <a.mesh
       position={pos as any}
       ref={meshRef}

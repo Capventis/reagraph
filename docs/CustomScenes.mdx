@@ -1,12 +1,14 @@
-import { Meta, Story, ArgsTable } from '@storybook/blocks';
+import { PureArgsTable, Meta, Story } from '@storybook/blocks';
 
 <Meta title="Docs/Advanced/Custom Scenes" />
 
 # Custom Scenes
+
 You can customize the ThreeJS scene by passing props to the `Canvas` component.
 This is useful if you want to add custom lighting, shadows, or other effects.
 
 ## Usage
+
 The example below shows how to add custom lighting to the scene which
 gives it a nice 3d effect.
 
@@ -22,6 +24,18 @@ gives it a nice 3d effect.
 
 The edge result will look something like:
 
-<div style={{ height: 400, width: '100%', position: 'relative', margin: '0 auto', background: 'white', borderRadius: 4, border: '1px solid rgba(0,0,0,.1)', boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0', overflow: 'hidden' }}>
+<div
+  style={{
+    height: 400,
+    width: '100%',
+    position: 'relative',
+    margin: '0 auto',
+    background: 'white',
+    borderRadius: 4,
+    border: '1px solid rgba(0,0,0,.1)',
+    boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0',
+    overflow: 'hidden'
+  }}
+>
   <Story id="demos-basic--custom-lighting" />
 </div>

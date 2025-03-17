@@ -1,4 +1,4 @@
-import { Meta, Story } from '@storybook/blocks';
+import { PureArgsTable, Meta, Story } from '@storybook/blocks';
 
 <Meta title="Docs/API/Data Shapes" />
 
@@ -10,6 +10,7 @@ The graph is made up of 2 basic data shape objects you can pass to the graph.
 - `GraphEdge` - The link between Nodes
 
 ## GraphElementBaseAttributes
+
 ```ts
 export interface GraphElementBaseAttributes<T = any> {
   /**
@@ -40,6 +41,7 @@ export interface GraphElementBaseAttributes<T = any> {
 ```
 
 ## GraphNode
+
 ```ts
 export interface GraphNode extends GraphElementBaseAttributes {
   /**
@@ -55,6 +57,7 @@ export interface GraphNode extends GraphElementBaseAttributes {
 ```
 
 ## GraphEdge
+
 ```ts
 export interface GraphEdge extends GraphElementBaseAttributes {
   /**

@@ -1,4 +1,4 @@
-import { Meta } from '@storybook/blocks';
+import { PureArgsTable, Meta, Story } from '@storybook/blocks';
 
 <Meta title="Docs/Getting Started/Theme" />
 
@@ -47,7 +47,7 @@ export interface Theme {
       stroke: ThemeColor;
       activeColor: ThemeColor;
       fontSize: number;
-    }
+    };
   };
   arrow: {
     fill: ThemeColor;
@@ -74,9 +74,7 @@ export interface Theme {
 which you can pass to the `GraphCanvas` component like:
 
 ```tsx
-<GraphCanvas
-  theme={myTheme}
-/>
+<GraphCanvas theme={myTheme} />
 ```
 
 you can extend the existing themes by importing them and then overriding them like:
@@ -92,11 +90,7 @@ const myTheme = {
   }
 };
 
-const App = () => (
-  <GraphCanvas
-    theme={myTheme}
-  />
-);
+const App = () => <GraphCanvas theme={myTheme} />;
 ```
 
 An example theme ( the light theme in this case ) ends up looking like this:

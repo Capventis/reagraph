@@ -1,6 +1,5 @@
 import React, {
   FC,
-  forwardRef,
   Fragment,
   ReactNode,
   Ref,
@@ -301,203 +300,199 @@ export interface GraphSceneRef {
   renderScene: () => void;
 }
 
-export const GraphScene: FC<GraphSceneProps & { ref?: Ref<GraphSceneRef> }> =
-  forwardRef(
-    (
-      {
-        onNodeClick,
-        onNodeDoubleClick,
-        onNodeContextMenu,
-        onEdgeContextMenu,
-        onEdgeClick,
-        onEdgePointerOver,
-        onEdgePointerOut,
-        onNodePointerOver,
-        onNodePointerOut,
-        onClusterClick,
-        onNodeDragged,
-        onClusterPointerOver,
-        onClusterPointerOut,
-        contextMenu,
-        animated,
-        disabled,
-        draggable,
-        edgeLabelPosition,
-        edgeArrowPosition,
-        edgeInterpolation = 'linear',
-        labelFontUrl,
-        renderNode,
-        ...rest
-      },
-      ref
-    ) => {
-      const { layoutType, clusterAttribute } = rest;
+export const GraphScene: FC<
+  GraphSceneProps & { ref?: React.RefObject<GraphSceneRef | null> }
+> = ({
+  onNodeClick,
+  onNodeDoubleClick,
+  onNodeContextMenu,
+  onEdgeContextMenu,
+  onEdgeClick,
+  onEdgePointerOver,
+  onEdgePointerOut,
+  onNodePointerOver,
+  onNodePointerOut,
+  onClusterClick,
+  onNodeDragged,
+  onClusterPointerOver,
+  onClusterPointerOut,
+  contextMenu,
+  animated,
+  disabled,
+  draggable,
+  edgeLabelPosition,
+  edgeArrowPosition,
+  edgeInterpolation = 'linear',
+  labelFontUrl,
+  renderNode,
+  ref,
+  ...rest
+}) => {
+  const { layoutType, clusterAttribute } = rest;
 
-      // Get the gl/scene/camera for render shortcuts
-      const gl = useThree(state => state.gl);
-      const scene = useThree(state => state.scene);
-      const camera = useThree(state => state.camera);
+  // Get the gl/scene/camera for render shortcuts
+  const gl = useThree(state => state.gl);
+  const scene = useThree(state => state.scene);
+  const camera = useThree(state => state.camera);
 
-      // Mount and build the graph
-      useGraph(rest);
+  // Mount and build the graph
+  useGraph(rest);
 
-      if (
-        clusterAttribute &&
-        !(layoutType === 'forceDirected2d' || layoutType === 'forceDirected3d')
-      ) {
-        throw new Error(
-          'Clustering is only supported for the force directed layouts.'
-        );
-      }
+  if (
+    clusterAttribute &&
+    !(layoutType === 'forceDirected2d' || layoutType === 'forceDirected3d')
+  ) {
+    throw new Error(
+      'Clustering is only supported for the force directed layouts.'
+    );
+  }
 
-      // Get the graph and nodes via the store for memo
-      const graph = useStore(state => state.graph);
-      const nodes = useStore(state => state.nodes);
-      const edges = useStore(state => state.edges);
-      const clusters = useStore(state => [...state.clusters.values()]);
+  // Get the graph and nodes via the store for memo
+  const graph = useStore(state => state.graph);
+  const nodes = useStore(state => state.nodes);
+  const edges = useStore(state => state.edges);
+  const clusters = useStore(state => [...state.clusters.values()]);
 
-      // Center the graph on the nodes
-      const { centerNodesById, fitNodesInViewById, isCentered } =
-        useCenterGraph({
-          animated,
-          disabled,
-          layoutType
-        });
+  // Center the graph on the nodes
+  const { centerNodesById, fitNodesInViewById, isCentered } = useCenterGraph({
+    animated,
+    disabled,
+    layoutType
+  });
 
-      // Let's expose some helper methods
-      useImperativeHandle(
-        ref,
-        () => ({
-          centerGraph: centerNodesById,
-          fitNodesInView: fitNodesInViewById,
-          graph,
-          renderScene: () => gl.render(scene, camera)
-        }),
-        [centerNodesById, fitNodesInViewById, graph, gl, scene, camera]
-      );
-
-      const nodeComponents = useMemo(
-        () =>
-          nodes.map(n => (
-            <Node
-              key={n?.id}
-              id={n?.id}
-              labelFontUrl={labelFontUrl}
-              draggable={draggable}
-              disabled={disabled}
-              animated={animated}
-              contextMenu={contextMenu}
-              renderNode={renderNode}
-              onClick={onNodeClick}
-              onDoubleClick={onNodeDoubleClick}
-              onContextMenu={onNodeContextMenu}
-              onPointerOver={onNodePointerOver}
-              onPointerOut={onNodePointerOut}
-              onDragged={onNodeDragged}
-            />
-          )),
-        [
-          animated,
-          contextMenu,
-          disabled,
-          draggable,
-          labelFontUrl,
-          nodes,
-          onNodeClick,
-          onNodeContextMenu,
-          onNodeDoubleClick,
-          onNodeDragged,
-          onNodePointerOut,
-          onNodePointerOver,
-          renderNode
-        ]
-      );
-
-      const edgeComponents = useMemo(
-        () =>
-          animated ? (
-            edges.map(e => (
-              <Edge
-                key={e.id}
-                id={e.id}
-                disabled={disabled}
-                animated={animated}
-                labelFontUrl={labelFontUrl}
-                labelPlacement={edgeLabelPosition}
-                arrowPlacement={edgeArrowPosition}
-                interpolation={edgeInterpolation}
-                contextMenu={contextMenu}
-                onClick={onEdgeClick}
-                onContextMenu={onEdgeContextMenu}
-                onPointerOver={onEdgePointerOver}
-                onPointerOut={onEdgePointerOut}
-              />
-            ))
-          ) : (
-            <Edges
-              edges={edges}
-              disabled={disabled}
-              animated={animated}
-              labelFontUrl={labelFontUrl}
-              labelPlacement={edgeLabelPosition}
-              arrowPlacement={edgeArrowPosition}
-              interpolation={edgeInterpolation}
-              contextMenu={contextMenu}
-              onClick={onEdgeClick}
-              onContextMenu={onEdgeContextMenu}
-              onPointerOver={onEdgePointerOver}
-              onPointerOut={onEdgePointerOut}
-            />
-          ),
-        [
-          animated,
-          contextMenu,
-          disabled,
-          edgeArrowPosition,
-          edgeInterpolation,
-          edgeLabelPosition,
-          edges,
-          labelFontUrl,
-          onEdgeClick,
-          onEdgeContextMenu,
-          onEdgePointerOut,
-          onEdgePointerOver
-        ]
-      );
-
-      const clusterComponents = useMemo(
-        () =>
-          clusters.map(c => (
-            <Cluster
-              key={c.label}
-              animated={animated}
-              disabled={disabled}
-              labelFontUrl={labelFontUrl}
-              onClick={onClusterClick}
-              onPointerOver={onClusterPointerOver}
-              onPointerOut={onClusterPointerOut}
-              {...c}
-            />
-          )),
-        [
-          animated,
-          clusters,
-          disabled,
-          labelFontUrl,
-          onClusterClick,
-          onClusterPointerOut,
-          onClusterPointerOver
-        ]
-      );
-
-      return (
-        isCentered && (
-          <Fragment>
-            {edgeComponents}
-            {nodeComponents}
-            {clusterComponents}
-          </Fragment>
-        )
-      );
-    }
+  // Let's expose some helper methods
+  useImperativeHandle(
+    ref,
+    () => ({
+      centerGraph: centerNodesById,
+      fitNodesInView: fitNodesInViewById,
+      graph,
+      renderScene: () => gl.render(scene, camera)
+    }),
+    [centerNodesById, fitNodesInViewById, graph, gl, scene, camera]
   );
+
+  const nodeComponents = useMemo(
+    () =>
+      nodes.map(n => (
+        <Node
+          key={n?.id}
+          id={n?.id}
+          labelFontUrl={labelFontUrl}
+          draggable={draggable}
+          disabled={disabled}
+          animated={animated}
+          contextMenu={contextMenu}
+          renderNode={renderNode}
+          onClick={onNodeClick}
+          onDoubleClick={onNodeDoubleClick}
+          onContextMenu={onNodeContextMenu}
+          onPointerOver={onNodePointerOver}
+          onPointerOut={onNodePointerOut}
+          onDragged={onNodeDragged}
+        />
+      )),
+    [
+      animated,
+      contextMenu,
+      disabled,
+      draggable,
+      labelFontUrl,
+      nodes,
+      onNodeClick,
+      onNodeContextMenu,
+      onNodeDoubleClick,
+      onNodeDragged,
+      onNodePointerOut,
+      onNodePointerOver,
+      renderNode
+    ]
+  );
+
+  const edgeComponents = useMemo(
+    () =>
+      animated ? (
+        edges.map(e => (
+          <Edge
+            key={e.id}
+            id={e.id}
+            disabled={disabled}
+            animated={animated}
+            labelFontUrl={labelFontUrl}
+            labelPlacement={edgeLabelPosition}
+            arrowPlacement={edgeArrowPosition}
+            interpolation={edgeInterpolation}
+            contextMenu={contextMenu}
+            onClick={onEdgeClick}
+            onContextMenu={onEdgeContextMenu}
+            onPointerOver={onEdgePointerOver}
+            onPointerOut={onEdgePointerOut}
+          />
+        ))
+      ) : (
+        <Edges
+          edges={edges}
+          disabled={disabled}
+          animated={animated}
+          labelFontUrl={labelFontUrl}
+          labelPlacement={edgeLabelPosition}
+          arrowPlacement={edgeArrowPosition}
+          interpolation={edgeInterpolation}
+          contextMenu={contextMenu}
+          onClick={onEdgeClick}
+          onContextMenu={onEdgeContextMenu}
+          onPointerOver={onEdgePointerOver}
+          onPointerOut={onEdgePointerOut}
+        />
+      ),
+    [
+      animated,
+      contextMenu,
+      disabled,
+      edgeArrowPosition,
+      edgeInterpolation,
+      edgeLabelPosition,
+      edges,
+      labelFontUrl,
+      onEdgeClick,
+      onEdgeContextMenu,
+      onEdgePointerOut,
+      onEdgePointerOver
+    ]
+  );
+
+  const clusterComponents = useMemo(
+    () =>
+      clusters.map(c => (
+        <Cluster
+          key={c.label}
+          animated={animated}
+          disabled={disabled}
+          labelFontUrl={labelFontUrl}
+          onClick={onClusterClick}
+          onPointerOver={onClusterPointerOver}
+          onPointerOut={onClusterPointerOut}
+          {...c}
+        />
+      )),
+    [
+      animated,
+      clusters,
+      disabled,
+      labelFontUrl,
+      onClusterClick,
+      onClusterPointerOut,
+      onClusterPointerOver
+    ]
+  );
+
+  return (
+    isCentered && (
+      <Fragment>
+        {edgeComponents}
+        {nodeComponents}
+        {clusterComponents}
+      </Fragment>
+    )
+  );
+};

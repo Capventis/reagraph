@@ -1,8 +1,9 @@
-import { Meta, Story, ArgsTable } from '@storybook/blocks';
+import { PureArgsTable, Meta, Story } from '@storybook/blocks';
 
 <Meta title="Docs/Advanced/Export Image" />
 
 # Export as Image
+
 reagraph allows for exporting the graph as an image. This can be done by calling the `exportCanvas`
 method on the graph instance. The method returns a string that resolves to the image data URL.
 
@@ -30,3 +31,4 @@ export const MApp = () => {
     </>
   );
 };
+```

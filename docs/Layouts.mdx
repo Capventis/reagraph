@@ -1,8 +1,9 @@
-import { Meta, Story } from '@storybook/blocks';
+import { PureArgsTable, Meta, Story } from '@storybook/blocks';
 
 <Meta title="Docs/Getting Started/Layouts" />
 
 # Layouts
+
 reagraph has the following layout types:
 
 - Force Directed 2D
@@ -21,11 +22,13 @@ reagraph has the following layout types:
 - Custom
 
 ## Layout Overrides
+
 You can override the default layout options for each respective layout using
 the `layoutOverrides` property on the `GraphCanvas` component. In each layout
 description, it will list the available overrides for that layout if applicable.
 
 ### Position Overrides
+
 You can override the position in any layout by passing the `getNodePosition` property
 to the canvas.
 
@@ -56,19 +59,29 @@ export interface NodePositionArgs {
 /**
  * Get the node position for a given node id.
  */
-getNodePosition: (
-  id: string,
-  args: NodePositionArgs
-) => InternalGraphPosition;
+getNodePosition: (id: string, args: NodePositionArgs) => InternalGraphPosition;
 ```
 
 See custom layouts for more information.
 
 ## Layout Types
+
 Below are examples of each layout type and corresponding descriptions.
 
 ### Force Directed 2D
-<div style={{ height: 300, width: 500, position: 'relative', background: 'white', borderRadius: 4, border: '1px solid rgba(0,0,0,.1)', boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0', overflow: 'hidden' }}>
+
+<div
+  style={{
+    height: 300,
+    width: 500,
+    position: 'relative',
+    background: 'white',
+    borderRadius: 4,
+    border: '1px solid rgba(0,0,0,.1)',
+    boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0',
+    overflow: 'hidden'
+  }}
+>
   <Story id="demos-layouts-2d--force-directed" />
 </div>
 
@@ -150,7 +163,19 @@ export interface ForceDirectedLayoutInputs extends LayoutFactoryProps {
 ```
 
 ### Force Directed 3D
-<div style={{ height: 300, width: 500, position: 'relative', background: 'white', borderRadius: 4, border: '1px solid rgba(0,0,0,.1)', boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0', overflow: 'hidden' }}>
+
+<div
+  style={{
+    height: 300,
+    width: 500,
+    position: 'relative',
+    background: 'white',
+    borderRadius: 4,
+    border: '1px solid rgba(0,0,0,.1)',
+    boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0',
+    overflow: 'hidden'
+  }}
+>
   <Story id="demos-layouts-3d--force-directed" />
 </div>
 
@@ -161,7 +186,19 @@ The 3D version is useful for very large graphs where many nodes would overlap ea
 This layout accepts the same layout overrides as the `forceDirected2d`.
 
 ### Circular 2d
-<div style={{ height: 300, width: 500, position: 'relative', background: 'white', borderRadius: 4, border: '1px solid rgba(0,0,0,.1)', boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0', overflow: 'hidden' }}>
+
+<div
+  style={{
+    height: 300,
+    width: 500,
+    position: 'relative',
+    background: 'white',
+    borderRadius: 4,
+    border: '1px solid rgba(0,0,0,.1)',
+    boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0',
+    overflow: 'hidden'
+  }}
+>
   <Story id="demos-layouts-2d--circular" />
 </div>
 
@@ -180,7 +217,19 @@ export interface CircularLayoutInputs extends LayoutFactoryProps {
 ```
 
 ### Tree 2D
-<div style={{ height: 300, width: 500, position: 'relative', background: 'white', borderRadius: 4, border: '1px solid rgba(0,0,0,.1)', boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0', overflow: 'hidden' }}>
+
+<div
+  style={{
+    height: 300,
+    width: 500,
+    position: 'relative',
+    background: 'white',
+    borderRadius: 4,
+    border: '1px solid rgba(0,0,0,.1)',
+    boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0',
+    overflow: 'hidden'
+  }}
+>
   <Story id="demos-layouts-2d--tree-top-down" />
 </div>
 
@@ -190,7 +239,19 @@ The tree layout is a good way to display a clear parent-child relationship betwe
 This layout accepts the same layout overrides as the `forceDirected2d`.
 
 ### Tree 3D
-<div style={{ height: 300, width: 500, position: 'relative', background: 'white', borderRadius: 4, border: '1px solid rgba(0,0,0,.1)', boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0', overflow: 'hidden' }}>
+
+<div
+  style={{
+    height: 300,
+    width: 500,
+    position: 'relative',
+    background: 'white',
+    borderRadius: 4,
+    border: '1px solid rgba(0,0,0,.1)',
+    boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0',
+    overflow: 'hidden'
+  }}
+>
   <Story id="demos-layouts-3d--tree-top-down" />
 </div>
 
@@ -200,7 +261,19 @@ This layout is the same as the tree 2d except adds another dimension. It uses
 This layout accepts the same layout overrides as the `forceDirected2d`.
 
 ### Radial 2D
-<div style={{ height: 300, width: 500, position: 'relative', background: 'white', borderRadius: 4, border: '1px solid rgba(0,0,0,.1)', boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0', overflow: 'hidden' }}>
+
+<div
+  style={{
+    height: 300,
+    width: 500,
+    position: 'relative',
+    background: 'white',
+    borderRadius: 4,
+    border: '1px solid rgba(0,0,0,.1)',
+    boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0',
+    overflow: 'hidden'
+  }}
+>
   <Story id="demos-layouts-2d--radial-out" />
 </div>
 
@@ -211,7 +284,19 @@ This layout uses [d3-force-3d](https://github.com/vasturiano/d3-force-3d).
 This layout accepts the same layout overrides as the `forceDirected2d`.
 
 ### Radial 3D
-<div style={{ height: 300, width: 500, position: 'relative', background: 'white', borderRadius: 4, border: '1px solid rgba(0,0,0,.1)', boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0', overflow: 'hidden' }}>
+
+<div
+  style={{
+    height: 300,
+    width: 500,
+    position: 'relative',
+    background: 'white',
+    borderRadius: 4,
+    border: '1px solid rgba(0,0,0,.1)',
+    boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0',
+    overflow: 'hidden'
+  }}
+>
   <Story id="demos-layouts-3d--radial-out" />
 </div>
 
@@ -220,7 +305,19 @@ Similar to the Radial 2D but adds another dimension. This layout uses [d3-force-
 This layout accepts the same layout overrides as the `forceDirected2d`.
 
 ### Hierarchical 2D
-<div style={{ height: 300, width: 500, position: 'relative', background: 'white', borderRadius: 4, border: '1px solid rgba(0,0,0,.1)', boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0', overflow: 'hidden' }}>
+
+<div
+  style={{
+    height: 300,
+    width: 500,
+    position: 'relative',
+    background: 'white',
+    borderRadius: 4,
+    border: '1px solid rgba(0,0,0,.1)',
+    boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0',
+    overflow: 'hidden'
+  }}
+>
   <Story id="demos-layouts-2d--hierarchical-top-down" />
 </div>
 
@@ -235,18 +332,30 @@ export interface HierarchicalLayoutInputs extends LayoutFactoryProps {
    */
   mode?: 'td' | 'lr';
   /**
-  * Factor of distance between nodes. Default 1.
-  */
+   * Factor of distance between nodes. Default 1.
+   */
   nodeSeparation?: number;
   /**
-  * Size of each node. Default [50,50]
-  */
+   * Size of each node. Default [50,50]
+   */
   nodeSize?: [number, number];
 }
 ```
 
 ### No Overlap
-<div style={{ height: 300, width: 500, position: 'relative', background: 'white', borderRadius: 4, border: '1px solid rgba(0,0,0,.1)', boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0', overflow: 'hidden' }}>
+
+<div
+  style={{
+    height: 300,
+    width: 500,
+    position: 'relative',
+    background: 'white',
+    borderRadius: 4,
+    border: '1px solid rgba(0,0,0,.1)',
+    boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0',
+    overflow: 'hidden'
+  }}
+>
   <Story id="demos-layouts-2d--no-overlap" />
 </div>
 
@@ -279,7 +388,19 @@ export interface NoOverlapLayoutInputs extends LayoutFactoryProps {
 ```
 
 ### Force Atlas 2
-<div style={{ height: 300, width: 500, position: 'relative', background: 'white', borderRadius: 4, border: '1px solid rgba(0,0,0,.1)', boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0', overflow: 'hidden' }}>
+
+<div
+  style={{
+    height: 300,
+    width: 500,
+    position: 'relative',
+    background: 'white',
+    borderRadius: 4,
+    border: '1px solid rgba(0,0,0,.1)',
+    boxShadow: 'rgb(0 0 0 / 10%) 0 1px 3px 0',
+    overflow: 'hidden'
+  }}
+>
   <Story id="demos-layouts-2d--force-atlas-2" />
 </div>
 
