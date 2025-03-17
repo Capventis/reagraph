@@ -36,9 +36,7 @@ export const Icon: FC<IconProps> = ({
   });
 
   return (
-    // @ts-ignore
     <a.sprite userData={{ id, type: 'node' }} scale={scale as any}>
-      {/* @ts-ignore */}
       <a.spriteMaterial
         attach="material"
         opacity={spriteOpacity}
@@ -48,9 +46,7 @@ export const Icon: FC<IconProps> = ({
         side={DoubleSide}
       >
         <primitive attach="map" object={texture} minFilter={LinearFilter} />
-        {/* @ts-ignore */}
       </a.spriteMaterial>
-      {/* @ts-ignore */}
     </a.sprite>
   );
 };

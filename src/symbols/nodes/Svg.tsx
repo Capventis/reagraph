@@ -44,7 +44,6 @@ export const Svg: FC<SvgProps> = ({
   const normalizedColor = useMemo(() => new Color(color), [color]);
 
   return (
-    // @ts-ignore
     <a.group userData={{ id, type: 'node' }} scale={scale as any}>
       <Billboard position={[0, 0, 1]}>
         <DreiSvg
@@ -67,7 +66,6 @@ export const Svg: FC<SvgProps> = ({
           }}
         />
       </Billboard>
-      {/* @ts-ignore */}
     </a.group>
   );
 };

@@ -74,13 +74,11 @@ export const Ring: FC<RingProps> = ({
 
   return (
     <Billboard position={[0, 0, 1]}>
-      {/* @ts-ignore */}
       <a.mesh scale={ringSize as any}>
         <ringGeometry
           attach="geometry"
           args={[innerRadius, outerRadius, segments]}
         />
-        {/* @ts-ignore */}
         <a.meshBasicMaterial
           attach="material"
           color={normalizedColor}
@@ -90,7 +88,6 @@ export const Ring: FC<RingProps> = ({
           side={DoubleSide}
           fog={true}
         />
-        {/* @ts-ignore */}
       </a.mesh>
     </Billboard>
   );

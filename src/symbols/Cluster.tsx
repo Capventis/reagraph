@@ -148,7 +148,6 @@ export const Cluster: FC<ClusterProps> = ({
   const cluster = useMemo(
     () =>
       theme.cluster && (
-        // @ts-ignore
         <a.group
           position={circlePosition as any}
           onPointerOver={pointerOver}
@@ -167,7 +166,7 @@ export const Cluster: FC<ClusterProps> = ({
         >
           <mesh>
             <ringGeometry attach="geometry" args={[offset, 0, 128]} />
-            {/* @ts-ignore */}
+
             <a.meshBasicMaterial
               attach="material"
               color={normalizedFill}
@@ -183,7 +182,7 @@ export const Cluster: FC<ClusterProps> = ({
               attach="geometry"
               args={[offset, rad + padding, 128]}
             />
-            {/* @ts-ignore */}
+
             <a.meshBasicMaterial
               attach="material"
               color={normalizedStroke}
@@ -195,7 +194,6 @@ export const Cluster: FC<ClusterProps> = ({
             />
           </mesh>
           {theme.cluster?.label && (
-            // @ts-ignore
             <a.group position={labelPosition as any}>
               <Label
                 text={label}
@@ -206,10 +204,8 @@ export const Cluster: FC<ClusterProps> = ({
                 color={theme.cluster?.label.color}
                 fontSize={12}
               />
-              {/* @ts-ignore */}
             </a.group>
           )}
-          {/* @ts-ignore */}
         </a.group>
       ),
     [

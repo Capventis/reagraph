@@ -35,10 +35,8 @@ export const Sphere: FC<NodeRendererProps> = ({
 
   return (
     <>
-      {/* @ts-ignore */}
       <a.mesh userData={{ id, type: 'node' }} scale={scale as any}>
         <sphereGeometry attach="geometry" args={[1, 25, 25]} />
-        {/* @ts-ignore */}
         <a.meshPhongMaterial
           attach="material"
           side={DoubleSide}
@@ -47,7 +45,6 @@ export const Sphere: FC<NodeRendererProps> = ({
           opacity={nodeOpacity}
           color={normalizedColor}
         />
-        {/* @ts-ignore */}
       </a.mesh>
       <Ring
         opacity={selected ? 0.5 : 0}

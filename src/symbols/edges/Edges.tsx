@@ -224,7 +224,6 @@ export const Edges: FC<EdgesProps> = ({
     <group onClick={handleClick} onContextMenu={handleContextMenu}>
       {/* Static edges */}
       <mesh ref={staticEdgesRef}>
-        {/* @ts-ignore */}
         <a.meshBasicMaterial
           attach="material-0"
           color={theme.edge.fill}
@@ -234,7 +233,6 @@ export const Edges: FC<EdgesProps> = ({
           side={DoubleSide}
           transparent={true}
         />
-        {/* @ts-ignore */}
         <a.meshBasicMaterial
           attach="material-1"
           color={theme.edge.activeFill}
@@ -247,7 +245,6 @@ export const Edges: FC<EdgesProps> = ({
       </mesh>
       {/* Dynamic edges */}
       <mesh ref={dynamicEdgesRef}>
-        {/* @ts-ignore */}
         <a.meshBasicMaterial
           attach="material-0"
           color={theme.edge.fill}
@@ -257,7 +254,6 @@ export const Edges: FC<EdgesProps> = ({
           side={DoubleSide}
           transparent={true}
         />
-        {/* @ts-ignore */}
         <a.meshBasicMaterial
           attach="material-1"
           color={theme.edge.activeFill}
