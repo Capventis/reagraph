@@ -1,8 +1,6 @@
 import React, {
   FC,
-  forwardRef,
   ReactNode,
-  Ref,
   Suspense,
   useImperativeHandle,
   useRef,
@@ -111,144 +109,146 @@ const CAMERA_DEFAULTS: any = {
   fov: 10
 };
 
-export const GraphCanvas: FC<GraphCanvasProps & { ref?: Ref<GraphCanvasRef> }> =
-  forwardRef(
-    (
-      {
-        edges,
-        children,
-        nodes,
-        minDistance,
-        maxDistance,
-        onCanvasClick,
-        disabled,
-        onLasso,
-        onLassoEnd,
-        onHotkeyA,
-        cameraMode = 'pan',
-        layoutType = 'forceDirected2d',
-        sizingType = 'default',
-        labelType = 'auto',
-        theme = lightTheme,
-        animated = true,
-        defaultNodeSize = 7,
-        minNodeSize = 5,
-        maxNodeSize = 15,
-        lassoType = 'none',
-        glOptions = {},
-        ...rest
-      },
-      ref: Ref<GraphCanvasRef>
-    ) => {
-      const rendererRef = useRef<GraphSceneRef | null>(null);
-      const controlsRef = useRef<CameraControlsRef | null>(null);
-      const canvasRef = useRef<HTMLCanvasElement | null>(null);
+export const GraphCanvas: FC<
+  GraphCanvasProps & { ref?: React.RefObject<GraphCanvasRef | null> }
+> = ({
+  edges,
+  children,
+  nodes,
+  minDistance,
+  maxDistance,
+  onCanvasClick,
+  disabled,
+  onLasso,
+  onLassoEnd,
+  onHotkeyA,
+  cameraMode = 'pan',
+  layoutType = 'forceDirected2d',
+  sizingType = 'default',
+  labelType = 'auto',
+  theme = lightTheme,
+  animated = true,
+  defaultNodeSize = 7,
+  minNodeSize = 5,
+  maxNodeSize = 15,
+  lassoType = 'none',
+  glOptions = {},
+  ref,
+  ...rest
+}) => {
+  const rendererRef = useRef<GraphSceneRef | null>(null);
+  const controlsRef = useRef<CameraControlsRef | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-      useImperativeHandle(ref, () => ({
-        centerGraph: (nodeIds, opts) =>
-          rendererRef.current?.centerGraph(nodeIds, opts),
-        fitNodesInView: (nodeIds, opts) =>
-          rendererRef.current?.fitNodesInView(nodeIds, opts),
-        zoomIn: () => controlsRef.current?.zoomIn(),
-        zoomOut: () => controlsRef.current?.zoomOut(),
-        dollyIn: distance => controlsRef.current?.dollyIn(distance),
-        dollyOut: distance => controlsRef.current?.dollyOut(distance),
-        panLeft: () => controlsRef.current?.panLeft(),
-        panRight: () => controlsRef.current?.panRight(),
-        panDown: () => controlsRef.current?.panDown(),
-        panUp: () => controlsRef.current?.panUp(),
-        resetControls: (animated?: boolean) =>
-          controlsRef.current?.resetControls(animated),
-        getControls: () => controlsRef.current?.controls,
-        getGraph: () => rendererRef.current?.graph,
-        exportCanvas: () => {
-          rendererRef.current.renderScene();
-          return canvasRef.current.toDataURL();
-        }
-      }));
-
-      // Defaults to pass to the store
-      const { selections, actives, collapsedNodeIds } = rest;
-
-      // It's pretty hard to get good animation performance with large n of edges/nodes
-      const finalAnimated =
-        edges.length + nodes.length > 400 ? false : animated;
-
-      const gl = useMemo(() => ({ ...glOptions, ...GL_DEFAULTS }), [glOptions]);
-
-      // hotkeys
-      useHotkeys([
-        {
-          name: 'HotkeyA',
-          disabled,
-          category: 'Graph',
-          keys: ['command+shift+a'],
-          callback: () => {
-            if (onHotkeyA) onHotkeyA();
-          }
-        }
-      ]);
-
-      // NOTE: The legacy/linear/flat flags are for color issues
-      // Reference: https://github.com/protectwise/troika/discussions/213#discussioncomment-3086666
-      return (
-        <div className={css.canvas}>
-          <Canvas
-            legacy
-            linear
-            ref={canvasRef}
-            flat
-            gl={gl}
-            camera={CAMERA_DEFAULTS}
-            onPointerMissed={onCanvasClick}
-          >
-            <Provider
-              createStore={() =>
-                createStore({
-                  selections,
-                  actives,
-                  theme,
-                  collapsedNodeIds
-                })
-              }
-            >
-              {theme.canvas?.background && (
-                <color attach="background" args={[theme.canvas.background]} />
-              )}
-              <ambientLight intensity={1} />
-              {children}
-              {theme.canvas?.fog && (
-                <fog attach="fog" args={[theme.canvas.fog, 4000, 9000]} />
-              )}
-              <CameraControls
-                mode={cameraMode}
-                ref={controlsRef}
-                disabled={disabled}
-                minDistance={minDistance}
-                maxDistance={maxDistance}
-                animated={animated}
-              >
-                <Lasso
-                  disabled={disabled}
-                  type={lassoType}
-                  onLasso={onLasso}
-                  onLassoEnd={onLassoEnd}
-                >
-                  <Suspense>
-                    <GraphScene
-                      ref={rendererRef as any}
-                      disabled={disabled}
-                      animated={finalAnimated}
-                      edges={edges}
-                      nodes={nodes}
-                      {...rest}
-                    />
-                  </Suspense>
-                </Lasso>
-              </CameraControls>
-            </Provider>
-          </Canvas>
-        </div>
-      );
+  useImperativeHandle(ref, () => ({
+    centerGraph: (nodeIds, opts) =>
+      rendererRef.current?.centerGraph(nodeIds, opts),
+    fitNodesInView: (nodeIds, opts) =>
+      rendererRef.current?.fitNodesInView(nodeIds, opts),
+    zoomIn: () => controlsRef.current?.zoomIn(),
+    zoomOut: () => controlsRef.current?.zoomOut(),
+    dollyIn: distance => controlsRef.current?.dollyIn(distance),
+    dollyOut: distance => controlsRef.current?.dollyOut(distance),
+    panLeft: () => controlsRef.current?.panLeft(),
+    panRight: () => controlsRef.current?.panRight(),
+    panDown: () => controlsRef.current?.panDown(),
+    panUp: () => controlsRef.current?.panUp(),
+    resetControls: (animated?: boolean) =>
+      controlsRef.current?.resetControls(animated),
+    getControls: () => controlsRef.current?.controls,
+    getGraph: () => rendererRef.current?.graph,
+    exportCanvas: () => {
+      rendererRef.current.renderScene();
+      return canvasRef.current.toDataURL();
     }
+  }));
+
+  // Defaults to pass to the store
+  const { selections, actives, collapsedNodeIds } = rest;
+
+  // It's pretty hard to get good animation performance with large n of edges/nodes
+  const finalAnimated = edges.length + nodes.length > 400 ? false : animated;
+
+  const gl = useMemo(() => ({ ...glOptions, ...GL_DEFAULTS }), [glOptions]);
+
+  // hotkeys
+  useHotkeys([
+    {
+      name: 'HotkeyA',
+      disabled,
+      category: 'Graph',
+      keys: ['command+shift+a'],
+      callback: () => {
+        if (onHotkeyA) onHotkeyA();
+      }
+    }
+  ]);
+
+  // NOTE: The legacy/linear/flat flags are for color issues
+  // Reference: https://github.com/protectwise/troika/discussions/213#discussioncomment-3086666
+  return (
+    <div className={css.canvas}>
+      <Canvas
+        legacy
+        linear
+        ref={canvasRef}
+        flat
+        gl={gl}
+        camera={CAMERA_DEFAULTS}
+        onPointerMissed={onCanvasClick}
+      >
+        <Provider
+          createStore={() =>
+            createStore({
+              selections,
+              actives,
+              theme,
+              collapsedNodeIds
+            })
+          }
+        >
+          {theme.canvas?.background && (
+            <color attach="background" args={[theme.canvas.background]} />
+          )}
+          <ambientLight intensity={1} />
+          {children}
+          {theme.canvas?.fog && (
+            <fog attach="fog" args={[theme.canvas.fog, 4000, 9000]} />
+          )}
+          <CameraControls
+            mode={cameraMode}
+            ref={controlsRef}
+            disabled={disabled}
+            minDistance={minDistance}
+            maxDistance={maxDistance}
+            animated={animated}
+          >
+            <Lasso
+              disabled={disabled}
+              type={lassoType}
+              onLasso={onLasso}
+              onLassoEnd={onLassoEnd}
+            >
+              <Suspense>
+                <GraphScene
+                  ref={rendererRef as any}
+                  disabled={disabled}
+                  animated={finalAnimated}
+                  edges={edges}
+                  nodes={nodes}
+                  layoutType={layoutType}
+                  sizingType={sizingType}
+                  labelType={labelType}
+                  defaultNodeSize={defaultNodeSize}
+                  minNodeSize={minNodeSize}
+                  maxNodeSize={maxNodeSize}
+                  {...rest}
+                />
+              </Suspense>
+            </Lasso>
+          </CameraControls>
+        </Provider>
+      </Canvas>
+    </div>
   );
+};
