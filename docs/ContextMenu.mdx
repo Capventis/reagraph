@@ -1,8 +1,9 @@
-import { Meta, Story } from '@storybook/blocks';
+import { PureArgsTable, Meta, Story } from '@storybook/blocks';
 
 <Meta title="Docs/Advanced/Context Menu" />
 
 # Context Menu
+
 reagraph supports context menus on nodes and edges. Out of the box, reagraph
 supports:
 
@@ -10,6 +11,7 @@ supports:
 - Custom Menu
 
 ## Radial Menu
+
 The setup the `RadialMenu` component, we need to setup the theme first. The
 radial menu uses CSS variables to define colors. Here is an example
 of how to define those colors:
@@ -18,9 +20,9 @@ of how to define those colors:
 body {
   --radial-menu-background: #fff;
   --radial-menu-color: #000;
-  --radial-menu-border: #AACBD2;
+  --radial-menu-border: #aacbd2;
   --radial-menu-active-color: #000;
-  --radial-menu-active-background: #D8E6EA;
+  --radial-menu-active-background: #d8e6ea;
 }
 ```
 
@@ -61,6 +63,7 @@ export const MyApp = () => (
 ```
 
 ## Custom Menu
+
 The `contextMenu` callback prop can be used to return a custom menu. Below is
 an example of how to setup a simple menu that displays the label of the node.
 

@@ -1,14 +1,17 @@
-import { Meta, Story } from '@storybook/blocks';
+import { PureArgsTable, Meta, Story } from '@storybook/blocks';
 
 <Meta title="Docs/Advanced/Selection" />
 
 # Selection
+
 Out of the box, reagraph supports selection handled either manually or via the `useSelection` hook.
 
 ## `useSelection`
+
 The `useSelection` hook will automatically manage selection state and bind some hotkeys for you.
 
 ### Interfaces
+
 The hook accepts the following:
 
 ```ts
@@ -138,6 +141,7 @@ export interface SelectionResult {
 ```
 
 ### Hotkeys
+
 The hotkeys that are bound via this hook are:
 
 - `ctrl/meta + a`: Select all nodes
@@ -145,6 +149,7 @@ The hotkeys that are bound via this hook are:
 - `ctrl/meta + click`: Toggle node selection
 
 ### Example
+
 A typical example might look like:
 
 ```tsx
@@ -172,6 +177,7 @@ export const App = () => {
 ```
 
 ## Manual Selection
+
 If you don't wish to use the `useSelection` hook you can handle the selections yourself manually via
 passing down a `string[]` of ids to the `selections` prop.
 
@@ -186,4 +192,5 @@ export const App = () => (
 ```
 
 ## Edge Selection
+
 Depending on the `PathSelectionTypes` and `SelectionTypes`, edges are also selected onNodeClick. If you don't wish to select edges onNodeClick for multi selections, set `PathSelectionTypes` to 'direct'.
