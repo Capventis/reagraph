@@ -30,6 +30,7 @@ export const Sphere: FC<NodeRendererProps> = ({
       duration: animated ? undefined : 0
     }
   });
+
   const normalizedColor = useMemo(() => new Color(color), [color]);
   const theme = useStore(state => state.theme);
 
@@ -37,7 +38,7 @@ export const Sphere: FC<NodeRendererProps> = ({
     <>
       <a.mesh userData={{ id, type: 'node' }} scale={scale as any}>
         <sphereGeometry attach="geometry" args={[1, 25, 25]} />
-        <a.meshPhongMaterial
+        <a.meshBasicMaterial
           attach="material"
           side={DoubleSide}
           transparent={true}
