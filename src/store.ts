@@ -62,6 +62,12 @@ export interface GraphState {
     ref: HTMLElement | null;
   }) => void;
   clearContextMenuPortal: () => void;
+  contextMenuScreenPosition?: {
+    x: number;
+    y: number;
+  };
+  setContextMenuScreenPosition: (position: { x: number; y: number }) => void;
+  clearContextMenuScreenPosition: () => void;
 }
 
 export const { Provider, useStore } = createContext<StoreApi<GraphState>>();
@@ -157,5 +163,13 @@ export const createStore = ({
       set(state => ({
         ...state,
         contextMenuPortal: { content: null, position: null, ref: null }
-      }))
+      })),
+    contextMenuScreenPosition: undefined,
+    setContextMenuScreenPosition: position =>
+      set(state => ({
+        ...state,
+        contextMenuScreenPosition: position
+      })),
+    clearContextMenuScreenPosition: () =>
+      set(state => ({ ...state, contextMenuScreenPosition: undefined }))
   }));

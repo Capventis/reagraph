@@ -13,36 +13,41 @@ function getAnchorScreenPosition(ref: HTMLElement | null) {
 }
 
 export const PortalAnchor = () => {
-  const { content, ref, position } = useStore(s => s.contextMenuPortal);
-  console.log(content, ref, position);
-  let screenPos: { x: number; y: number } | null = null;
+  const { contextMenuPortal, contextMenuScreenPosition } = useStore(state => ({
+    contextMenuPortal: state.contextMenuPortal,
+    contextMenuScreenPosition: state.contextMenuScreenPosition
+  }));
 
   if (
-    position &&
-    typeof position.x === 'number' &&
-    typeof position.y === 'number'
+    !contextMenuPortal ||
+    !contextMenuPortal.content ||
+    !contextMenuScreenPosition
   ) {
-    screenPos = position;
-  } else if (ref instanceof HTMLElement) {
-    screenPos = getAnchorScreenPosition(ref);
+    return null;
   }
 
-  if (!content || !screenPos) return null;
+  const { x, y } = contextMenuScreenPosition;
 
-  console.log('creating portal at', screenPos);
+  if (!contextMenuPortal.content || !contextMenuScreenPosition) return null;
+
+  console.log(
+    'creating portal at',
+    contextMenuScreenPosition,
+    contextMenuPortal
+  );
 
   return createPortal(
     <div
       style={{
         position: 'fixed',
-        left: screenPos.x,
-        top: screenPos.y,
+        left: x,
+        top: y,
         zIndex: 9999,
         pointerEvents: 'auto',
         transform: 'translate(-50%, -50%)'
       }}
     >
-      {content}
+      {contextMenuPortal.content}
     </div>,
     document.body
   );

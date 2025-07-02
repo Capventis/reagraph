@@ -21,6 +21,7 @@ import ThreeCameraControls from 'camera-controls';
 import css from './GraphCanvas.module.css';
 import { useHotkeys } from 'reakeys';
 import { PortalAnchor } from 'PortalAnchor';
+import { ContextMenuPositionUpdater } from 'ContextMenuPositionUpdater';
 
 export interface GraphCanvasProps extends Omit<GraphSceneProps, 'theme'> {
   /**
@@ -249,6 +250,7 @@ export const GraphCanvas: FC<
               </Suspense>
             </Lasso>
           </CameraControls>
+          <ContextMenuPositionUpdater />
         </Canvas>
         <PortalAnchor />
       </Provider>
