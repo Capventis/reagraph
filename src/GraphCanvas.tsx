@@ -20,6 +20,8 @@ import { Lasso, LassoType } from './selection';
 import ThreeCameraControls from 'camera-controls';
 import css from './GraphCanvas.module.css';
 import { useHotkeys } from 'reakeys';
+import { PortalAnchor } from 'PortalAnchor';
+import { ContextMenuPositionUpdater } from 'ContextMenuPositionUpdater';
 
 export interface GraphCanvasProps extends Omit<GraphSceneProps, 'theme'> {
   /**
@@ -186,26 +188,27 @@ export const GraphCanvas: FC<
 
   // NOTE: The legacy/linear/flat flags are for color issues
   // Reference: https://github.com/protectwise/troika/discussions/213#discussioncomment-3086666
+
   return (
     <div className={css.canvas}>
-      <Canvas
-        legacy
-        linear
-        ref={canvasRef}
-        flat
-        gl={gl}
-        camera={CAMERA_DEFAULTS}
-        onPointerMissed={onCanvasClick}
+      <Provider
+        createStore={() =>
+          createStore({
+            selections,
+            actives,
+            theme,
+            collapsedNodeIds
+          })
+        }
       >
-        <Provider
-          createStore={() =>
-            createStore({
-              selections,
-              actives,
-              theme,
-              collapsedNodeIds
-            })
-          }
+        <Canvas
+          legacy
+          linear
+          ref={canvasRef}
+          flat
+          gl={gl}
+          camera={CAMERA_DEFAULTS}
+          onPointerMissed={onCanvasClick}
         >
           {theme.canvas?.background && (
             <color attach="background" args={[theme.canvas.background]} />
@@ -247,8 +250,10 @@ export const GraphCanvas: FC<
               </Suspense>
             </Lasso>
           </CameraControls>
-        </Provider>
-      </Canvas>
+          <ContextMenuPositionUpdater />
+        </Canvas>
+        <PortalAnchor />
+      </Provider>
     </div>
   );
 };

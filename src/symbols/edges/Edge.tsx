@@ -1,7 +1,7 @@
 import React, { FC, useCallback, useMemo } from 'react';
 import { useSpring, a } from '@react-spring/three';
 import { Html } from '@react-three/drei';
-import { ColorRepresentation, Euler } from 'three';
+import { ColorRepresentation, Euler, Vector3 } from 'three';
 
 import { useStore } from '../../store';
 import { Theme } from '../../themes';
@@ -99,6 +99,10 @@ export const Edge: FC<EdgeProps> = ({
   const edgeContextMenus = useStore(state => state.edgeContextMenus);
   const setEdgeContextMenus = useStore(state => state.setEdgeContextMenus);
 
+  const hasContextMenu = contextMenu && edgeContextMenus.has(edge.id);
+
+  const setContextMenuPortal = useStore(s => s.setContextMenuPortal);
+
   const [{ labelPosition }] = useSpring(
     () => ({
       from: {
@@ -144,30 +148,45 @@ export const Edge: FC<EdgeProps> = ({
     ]
   );
 
+  // Remove effect, use event handler instead
+
   return (
-    <group>
-      {labelVisible && label && (
-        <a.group position={labelPosition as any}>
-          <Label
-            text={label}
-            ellipsis={15}
-            fontUrl={labelFontUrl}
-            stroke={theme.edge.label.stroke}
-            color={color}
-            opacity={opacity}
-            fontSize={theme.edge.label.fontSize}
-            rotation={labelRotation}
-          />
-        </a.group>
-      )}
-      {contextMenu && edgeContextMenus.has(edge.id) && (
-        <Html prepend={true} center={true} position={midPoint}>
-          {contextMenu({
-            data: edge,
-            onClose: () => removeContextMenu(edge)
-          })}
-        </Html>
-      )}
-    </group>
+    <>
+      <group
+        onContextMenu={event => {
+          event.stopPropagation();
+          if (contextMenu) {
+            setContextMenuPortal({
+              content: contextMenu({
+                data: edge,
+                onClose: () =>
+                  setContextMenuPortal({
+                    content: null,
+                    ref: null,
+                    position: null
+                  })
+              }),
+              ref: null, // You could pass a ref to the group if you want to anchor to it
+              position: midPoint // For 3D anchor, you may want to store the 3D position
+            });
+          }
+        }}
+      >
+        {labelVisible && label && (
+          <a.group position={labelPosition as any}>
+            <Label
+              text={label}
+              ellipsis={15}
+              fontUrl={labelFontUrl}
+              stroke={theme.edge.label.stroke}
+              color={color}
+              opacity={opacity}
+              fontSize={theme.edge.label.fontSize}
+              rotation={labelRotation}
+            />
+          </a.group>
+        )}
+      </group>
+    </>
   );
 };

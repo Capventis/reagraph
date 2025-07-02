@@ -1,3 +1,4 @@
+import { ReactNode } from 'react';
 import { StoreApi, create } from 'zustand';
 import createContext from 'zustand/context';
 import {
@@ -48,6 +49,25 @@ export interface GraphState {
   setEdges: (edges: InternalGraphEdge[]) => void;
   setNodePosition: (id: string, position: InternalGraphPosition) => void;
   setCollapsedNodeIds: (nodeIds: string[]) => void;
+
+  // Context menu portal state
+  contextMenuPortal: {
+    content: ReactNode | null;
+    position: { x: number; y: number } | null;
+    ref: HTMLElement | null;
+  };
+  setContextMenuPortal: (portal: {
+    content: ReactNode | null;
+    position: { x: number; y: number } | null;
+    ref: HTMLElement | null;
+  }) => void;
+  clearContextMenuPortal: () => void;
+  contextMenuScreenPosition?: {
+    x: number;
+    y: number;
+  };
+  setContextMenuScreenPosition: (position: { x: number; y: number }) => void;
+  clearContextMenuScreenPosition: () => void;
 }
 
 export const { Provider, useStore } = createContext<StoreApi<GraphState>>();
@@ -133,5 +153,23 @@ export const createStore = ({
         };
       }),
     setCollapsedNodeIds: (nodeIds = []) =>
-      set(state => ({ ...state, collapsedNodeIds: nodeIds }))
+      set(state => ({ ...state, collapsedNodeIds: nodeIds })),
+
+    // Context menu portal state
+    contextMenuPortal: { content: null, position: null, ref: null },
+    setContextMenuPortal: portal =>
+      set(state => ({ ...state, contextMenuPortal: portal })),
+    clearContextMenuPortal: () =>
+      set(state => ({
+        ...state,
+        contextMenuPortal: { content: null, position: null, ref: null }
+      })),
+    contextMenuScreenPosition: undefined,
+    setContextMenuScreenPosition: position =>
+      set(state => ({
+        ...state,
+        contextMenuScreenPosition: position
+      })),
+    clearContextMenuScreenPosition: () =>
+      set(state => ({ ...state, contextMenuScreenPosition: undefined }))
   }));

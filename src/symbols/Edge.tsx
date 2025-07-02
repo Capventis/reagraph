@@ -127,7 +127,8 @@ export const Edge: FC<EdgeProps> = ({
 
   // UI states
   const [active, setActive] = useState<boolean>(false);
-  const [menuVisible, setMenuVisible] = useState<boolean>(false);
+  // Remove local menuVisible state
+  const setContextMenuPortal = useStore(s => s.setContextMenuPortal);
 
   // Edge data
   const edges = useStore(state => state.edges);
@@ -298,7 +299,6 @@ export const Edge: FC<EdgeProps> = ({
           onActive={setActive}
           onContextMenu={() => {
             if (!disabled) {
-              setMenuVisible(true);
               onContextMenu?.(edge);
             }
           }}
@@ -365,17 +365,6 @@ export const Edge: FC<EdgeProps> = ({
     ]
   );
 
-  const menuComponent = useMemo(
-    () =>
-      menuVisible &&
-      contextMenu && (
-        <Html prepend={true} center={true} position={midPoint}>
-          {contextMenu({ data: edge, onClose: () => setMenuVisible(false) })}
-        </Html>
-      ),
-    [menuVisible, contextMenu, midPoint, edge]
-  );
-
   return (
     <group>
       <Line
@@ -401,15 +390,26 @@ export const Edge: FC<EdgeProps> = ({
         onPointerOver={pointerOver}
         onPointerOut={pointerOut}
         onContextMenu={() => {
-          if (!disabled) {
-            setMenuVisible(true);
-            onContextMenu?.(edge);
+          if (!disabled && contextMenu) {
+            setContextMenuPortal({
+              content: contextMenu({
+                data: edge,
+                onClose: () =>
+                  setContextMenuPortal({
+                    content: null,
+                    ref: null,
+                    position: null
+                  })
+              }),
+              ref: null,
+              position: { x: midPoint.x, y: midPoint.y }
+            });
           }
+          onContextMenu?.(edge);
         }}
       />
       {arrowComponent}
       {labelComponent}
-      {menuComponent}
     </group>
   );
 };
