@@ -7,7 +7,8 @@ import React, {
   useRef,
   useState
 } from 'react';
-import { Group } from 'three';
+import { createPortal } from 'react-dom';
+import { Group, Vector3 } from 'three';
 import { animationConfig } from '../utils';
 import { useSpring, a } from '@react-spring/three';
 import { Sphere } from './nodes/Sphere';
@@ -23,9 +24,10 @@ import { Html, useCursor } from '@react-three/drei';
 import { useCameraControls } from '../CameraControls';
 import { useStore } from '../store';
 import { useDrag } from '../utils/useDrag';
+// import { useContextMenuPortal } from '../utils';
 import { Icon } from './nodes';
 import { useHoverIntent } from '../utils/useHoverIntent';
-import { ThreeEvent } from '@react-three/fiber';
+import { ThreeEvent, useThree } from '@react-three/fiber';
 
 export interface NodeProps {
   /**
@@ -156,7 +158,7 @@ export const Node: FC<NodeProps> = ({
 
   const group = useRef<Group | null>(null);
   const [active, setActive] = useState<boolean>(false);
-  const [menuVisible, setMenuVisible] = useState<boolean>(false);
+  // Remove local menuVisible state
 
   const shouldHighlight = active || isSelected || isActive;
 
@@ -364,63 +366,84 @@ export const Node: FC<NodeProps> = ({
     ]
   );
 
-  const menuComponent = useMemo(
-    () =>
-      menuVisible &&
-      contextMenu && (
-        <Html prepend={true} center={true}>
-          {contextMenu({
-            data: node,
-            canCollapse,
-            isCollapsed,
-            onCollapse,
-            onClose: () => setMenuVisible(false)
-          })}
-        </Html>
-      ),
-    [menuVisible, contextMenu, node, canCollapse, isCollapsed, onCollapse]
-  );
+  const setContextMenuPortal = useStore(s => s.setContextMenuPortal);
+
+  const { camera, size } = useThree();
+
+  const getGroupScreenPosition = () => {
+    if (!group.current) return null;
+    // Get world position of the group
+    const worldPosition = new Vector3();
+    group.current.getWorldPosition(worldPosition);
+
+    // Project to NDC
+    worldPosition.project(camera);
+
+    // Convert to screen coordinates
+    const x = (worldPosition.x * 0.5 + 0.5) * size.width;
+    const y = (worldPosition.y * -0.5 + 0.5) * size.height;
+    return { x, y };
+  };
 
   return (
-    <a.group
-      renderOrder={1}
-      userData={{ id, type: 'node' }}
-      ref={group}
-      position={nodePosition as any}
-      onPointerOver={pointerOver}
-      onPointerOut={pointerOut}
-      onClick={(event: ThreeEvent<MouseEvent>) => {
-        if (!disabled && !isDragging) {
-          onClick?.(
-            node,
-            {
-              canCollapse,
-              isCollapsed
-            },
-            event
-          );
-        }
-      }}
-      onDoubleClick={(event: ThreeEvent<MouseEvent>) => {
-        if (!disabled && !isDragging) {
-          onDoubleClick?.(node, event);
-        }
-      }}
-      onContextMenu={() => {
-        if (!disabled) {
-          setMenuVisible(true);
+    <>
+      <a.group
+        renderOrder={1}
+        userData={{ id, type: 'node' }}
+        ref={group}
+        position={nodePosition as any}
+        onPointerOver={pointerOver}
+        onPointerOut={pointerOut}
+        onClick={(event: ThreeEvent<MouseEvent>) => {
+          if (!disabled && !isDragging) {
+            onClick?.(
+              node,
+              {
+                canCollapse,
+                isCollapsed
+              },
+              event
+            );
+          }
+        }}
+        onDoubleClick={(event: ThreeEvent<MouseEvent>) => {
+          if (!disabled && !isDragging) {
+            onDoubleClick?.(node, event);
+          }
+        }}
+        onContextMenu={() => {
+          if (!disabled && contextMenu) {
+            const screenPos = getGroupScreenPosition();
+            const worldPosition = new Vector3();
+            group.current.getWorldPosition(worldPosition);
+            setContextMenuPortal({
+              content: contextMenu({
+                data: node,
+                canCollapse,
+                isCollapsed,
+                onCollapse,
+                onClose: () =>
+                  setContextMenuPortal({
+                    content: null,
+                    ref: null,
+                    position: null
+                  })
+              }),
+              ref: group.current,
+              position: screenPos
+            });
+          }
           onContextMenu?.(node, {
             canCollapse,
             isCollapsed,
             onCollapse
           });
-        }
-      }}
-      {...(bind() as any)}
-    >
-      {nodeComponent}
-      {menuComponent}
-      {labelComponent}
-    </a.group>
+        }}
+        {...(bind() as any)}
+      >
+        {nodeComponent}
+        {labelComponent}
+      </a.group>
+    </>
   );
 };
